@@ -1,0 +1,57 @@
+
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
+import java.awt.image.BufferedImage;
+import javax.swing.ImageIcon;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+
+
+public class ImageFlip extends JPanel {
+
+    Image castle;
+    BufferedImage bufferedImage;
+
+    public ImageFlip() {
+        castle = new ImageIcon("4.jpg").getImage();
+        bufferedImage =  new BufferedImage(castle.getWidth(null), 
+                 castle.getHeight(null), BufferedImage.TYPE_INT_RGB);
+    }
+    public void paint(Graphics g) {
+        Graphics2D g2d = (Graphics2D) g;
+        Graphics gb = bufferedImage.getGraphics();
+        //define a posicao inicial da iamgem x=0 y=0
+        gb.drawImage(castle, 0, 0, null);
+        gb.dispose();
+//AffineTransform essa classe você define o tamanho da imagem por escala x=-1.5 e y=1.5
+        AffineTransform tx = AffineTransform.getScaleInstance(-1.5, 1.5);
+//tx.translate
+        tx.translate(-castle.getWidth(null), );
+ //No nosso caso, a classe AffineTransformOp executa 
+ //raspagem e tradução dos pixels da imagem.
+        AffineTransformOp op = new AffineTransformOp(tx, 
+                                AffineTransformOp.TYPE_NEAREST_NEIGHBOR);
+        bufferedImage = op.filter(bufferedImage, null);
+
+        g2d.drawImage(castle, 200, 250, null);
+        //mostra a imagem original e definindo a posicao da imagem onde x=200 e y=250
+        g2d.drawImage(bufferedImage, null, 700, 250);
+        //mostra a imagem invertida e define a posicao da imagem onde x=700 e y=250
+    }
+
+    public static void main(String[] args) {
+
+        JFrame frame = new JFrame("Flip image");
+        frame.add(new ImageFlip());
+        //maximiza a tela para full scren
+        frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //define o tamanho da janela
+        frame.setSize(500, 600);
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+    }
+}
